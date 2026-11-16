@@ -1,6 +1,6 @@
 
 # DIGITAL NOTES MANAGEMENT SYSTEM
-# Function 1: Load Notes:
+# Load Notes:
 def load_notes():
     try:
         with open("notes.txt", "r") as file:
@@ -8,11 +8,11 @@ def load_notes():
             return notes
     except FileNotFoundError:
         return []
-# Function 2: Save Note;
+#Save Note;
 def save_notes(notes):
     with open("notes.txt", "w") as file:
         file.writelines(notes)
-# Function 3: Generate Note ID
+#Generate Note ID
 def generate_note_id(notes):
     max_id = 0
     for note in notes:
@@ -25,7 +25,7 @@ def generate_note_id(notes):
                 continue
     return f"N{max_id + 1}"
 
-# Function 4: Add notes:
+#Add notes:
 def add_note():
     notes = load_notes()
     title = input("Enter Your Title: ")
@@ -39,22 +39,21 @@ def add_note():
     print("Note saved. ID:", note_id, "|", title)
 
 
-# Function 5: View all notes
+#View all notes
 def view_notes():
     notes = load_notes()
     if len(notes) == 0:
         print("No notes found.")
         return
-    print("\n----- ALL NOTES -----")
+    print("\n------ ALL NOTES -----")
     for note in notes:
         parts = note.strip().split("|", 2)
         if len(parts) == 3:
             print("ID:", parts[0])
             print("Title:", parts[1])
             print("Content:", parts[2])
-            print("---------------------")
 
-# Function 6: Search notes
+# Search notes
 def search_notes():
     notes = load_notes()
     if len(notes) == 0:
@@ -80,34 +79,34 @@ def search_notes():
         print("Note not found.")
 
 
-# Function 7: Edit Notes
+#Edit Notes
 def edit_note():
     notes = load_notes()
     if len(notes) == 0:
         print("No notes found.")
         return
-    note_id = input("Enter note ID to edit: ").strip()
+    note_id =input("Enter note ID to edit:").strip()
     found = False
     for i in range(len(notes)):
         parts = notes[i].strip().split("|", 2)
         if len(parts) == 3 and parts[0] == note_id:
-            new_title = input("Enter New Title: ")
-            new_content = input("Enter New Content: ")
+            new_title = input("Enter New Title:")
+            new_content = input("Enter New Content:")
             if new_title.strip() == "":
-                print("Title cannot be empty.")
+                print("title cannot be empty.")
                 return
             notes[i] = f"{note_id}|{new_title}|{new_content}\n"
             found = True
             break
     if found:
         save_notes(notes)
-        print("Note", note_id, "updated successfully.")
+        print("Note", note_id, "Updated successfully.")
 
     else:
         print("Note ID not found.")
 
 
-# Function 8: Delete Notes
+#Delete Notes
 def delete_note():
     notes = load_notes()
 
@@ -131,9 +130,8 @@ def delete_note():
         print("Note ID not found.")
 
 while True:
-
     print("""
-------- DIGITAL NOTES MANAGEMENT SYSTEM -------
+------- DIGITAL NOTES MANAGEMENT SYSTEM ------
 
     1. Add Notes
     2. View All Notes
@@ -145,23 +143,23 @@ while True:
 """)
 
     try:
-        choice = int(input("Enter your choice: "))
+        choice = int(input("Enter your choice:"))
 
     except ValueError:
-        print("Please enter a valid number!")
+        print("please enter a valid number!")
         continue
-    if choice == 1:
+    if choice ==1:
         add_note()
-    elif choice == 2:
+    elif choice ==2:
         view_notes()
-    elif choice == 3:
+    elif choice ==3:
         search_notes()
-    elif choice == 4:
+    elif choice ==4:
         edit_note()
-    elif choice == 5:
+    elif choice ==5:
         delete_note()
-    elif choice == 6:
+    elif choice ==6:
         print("Thank you for using Digital Notes Management System.")
         break
     else:
-        print("Invalid choice! Please select a valid option.")
+        print("Invalid Choice. Please select valid option.")
