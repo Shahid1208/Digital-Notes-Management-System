@@ -1,6 +1,5 @@
-
 # DIGITAL NOTES MANAGEMENT SYSTEM
-# Load Notes:
+
 def load_notes():
     try:
         with open("notes.txt", "r") as file:
@@ -8,11 +7,11 @@ def load_notes():
             return notes
     except FileNotFoundError:
         return []
-#Save Note;
+
 def save_notes(notes):
     with open("notes.txt", "w") as file:
         file.writelines(notes)
-#Generate Note ID
+
 def generate_note_id(notes):
     max_id = 0
     for note in notes:
@@ -25,7 +24,8 @@ def generate_note_id(notes):
                 continue
     return f"N{max_id + 1}"
 
-#Add notes:
+
+
 def add_note():
     notes = load_notes()
     title = input("Enter Your Title: ")
@@ -39,13 +39,12 @@ def add_note():
     print("Note saved. ID:", note_id, "|", title)
 
 
-#View all notes
 def view_notes():
     notes = load_notes()
     if len(notes) == 0:
         print("No notes found.")
         return
-    print("\n------ ALL NOTES -----")
+    print("\n----- ALL NOTES -----")
     for note in notes:
         parts = note.strip().split("|", 2)
         if len(parts) == 3:
@@ -53,7 +52,7 @@ def view_notes():
             print("Title:", parts[1])
             print("Content:", parts[2])
 
-# Search notes
+
 def search_notes():
     notes = load_notes()
     if len(notes) == 0:
@@ -79,18 +78,17 @@ def search_notes():
         print("Note not found.")
 
 
-#Edit Notes
 def edit_note():
     notes = load_notes()
     if len(notes) == 0:
         print("No notes found.")
         return
-    note_id =input("Enter note ID to edit:").strip()
+    note_id = input("Enter note ID to edit: ").strip()
     found = False
     for i in range(len(notes)):
         parts = notes[i].strip().split("|", 2)
         if len(parts) == 3 and parts[0] == note_id:
-            new_title = input("Enter New Title:")
+            new_title = input("Enter New Title: ")
             new_content = input("Enter New Content:")
             if new_title.strip() == "":
                 print("title cannot be empty.")
@@ -101,12 +99,11 @@ def edit_note():
     if found:
         save_notes(notes)
         print("Note", note_id, "Updated successfully.")
-
     else:
         print("Note ID not found.")
 
 
-#Delete Notes
+
 def delete_note():
     notes = load_notes()
 
