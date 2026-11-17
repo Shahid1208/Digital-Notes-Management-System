@@ -1,10 +1,8 @@
 # DIGITAL NOTES MANAGEMENT SYSTEM
-
 def load_notes():
     try:
         with open("notes.txt", "r") as file:
-            notes = file.readlines()
-            return notes
+            return file.readlines()
     except FileNotFoundError:
         return []
 
@@ -25,54 +23,48 @@ def generate_note_id(notes):
     return f"N{max_id + 1}"
 
 
-
 def add_note():
     notes = load_notes()
-    title = input("Enter Your Title: ")
-    content = input("Enter Your Content: ")
-    if title.strip() == "":
+    title = input("Enter Your Title: ").strip()
+    content = input("Enter Your Content: ").strip()
+
+    if title == "":
         print("Title cannot be empty. Note not saved.")
         return
     note_id = generate_note_id(notes)
     notes.append(f"{note_id}|{title}|{content}\n")
     save_notes(notes)
-    print("Note saved. ID:", note_id, "|", title)
+    print(f"Note saved. ID: {note_id} | {title}")
 
 
 def view_notes():
-    notes = load_notes()
-    if len(notes) == 0:
+    try:
+        with open("notes.txt", "r") as file:
+            data = file.read().strip()
+        if data == "":
+            print("No notes found.")
+            return
+        for note in data.splitlines():
+            parts = note.strip().split("|", 2)
+            if len(parts) == 3:
+                print(f"{parts[0]} | {parts[1]} | {parts[2]}")
+    except FileNotFoundError:
         print("No notes found.")
-        return
-    print("\n----- ALL NOTES -----")
-    for note in notes:
-        parts = note.strip().split("|", 2)
-        if len(parts) == 3:
-            print("ID:", parts[0])
-            print("Title:", parts[1])
-            print("Content:", parts[2])
-
 
 def search_notes():
     notes = load_notes()
-    if len(notes) == 0:
-        print("No notes found.")
-        return
-    search_text = input("Enter title or content to to search: ").strip().lower()
+    search_text = input("Enter title or content to search: ").strip().lower()
     if search_text == "":
         print("Search title or content cannot be empty.")
         return
     found = False
+
     for note in notes:
         parts = note.strip().split("|", 2)
         if len(parts) == 3:
             note_id, title, content = parts
-            if (search_text in title.lower() or
-                    search_text in content.lower()):
-                print("\nNote found:")
-                print("ID:", note_id)
-                print("Title:", title)
-                print("Content:", content)
+            if search_text in title.lower() or search_text in content.lower():
+                print(f"{note_id} | {title} | {content}")
                 found = True
     if not found:
         print("Note not found.")
@@ -80,39 +72,31 @@ def search_notes():
 
 def edit_note():
     notes = load_notes()
-    if len(notes) == 0:
-        print("No notes found.")
-        return
     note_id = input("Enter note ID to edit: ").strip()
     found = False
+
     for i in range(len(notes)):
         parts = notes[i].strip().split("|", 2)
         if len(parts) == 3 and parts[0] == note_id:
-            new_title = input("Enter New Title: ")
-            new_content = input("Enter New Content:")
-            if new_title.strip() == "":
-                print("title cannot be empty.")
-                return
-            notes[i] = f"{note_id}|{new_title}|{new_content}\n"
+            new_content = input("Enter New Content: ").strip()
+            notes[i] = f"{parts[0]}|{parts[1]}|{new_content}\n"
             found = True
             break
+
     if found:
         save_notes(notes)
-        print("Note", note_id, "Updated successfully.")
+        print(f"Note {note_id} updated.")
     else:
         print("Note ID not found.")
 
 
-
+# DELETE NOTE
 def delete_note():
     notes = load_notes()
-
-    if len(notes) == 0:
-        print("No notes found.")
-        return
     note_id = input("Enter note ID to delete: ").strip()
     updated_notes = []
     found = False
+
     for note in notes:
         parts = note.strip().split("|", 2)
         if len(parts) == 3 and parts[0] == note_id:
@@ -121,12 +105,17 @@ def delete_note():
             updated_notes.append(note)
     if found:
         save_notes(updated_notes)
-        print("Note", note_id, "deleted.")
-        print("Notes left:", len(updated_notes))
+        remaining = sum(
+            1 for note in updated_notes
+            if len(note.strip().split("|", 2)) == 3
+        )
+        print(f"Note {note_id} deleted. Notes left: {remaining}")
     else:
         print("Note ID not found.")
 
+
 while True:
+
     print("""
 ------- DIGITAL NOTES MANAGEMENT SYSTEM ------
 
@@ -140,22 +129,21 @@ while True:
 """)
 
     try:
-        choice = int(input("Enter your choice:"))
-
+        choice = int(input("Enter your choice: "))
     except ValueError:
-        print("please enter a valid number!")
+        print("Please enter a valid number!")
         continue
-    if choice ==1:
+    if choice == 1:
         add_note()
-    elif choice ==2:
+    elif choice == 2:
         view_notes()
-    elif choice ==3:
+    elif choice == 3:
         search_notes()
-    elif choice ==4:
+    elif choice == 4:
         edit_note()
-    elif choice ==5:
+    elif choice == 5:
         delete_note()
-    elif choice ==6:
+    elif choice == 6:
         print("Thank you for using Digital Notes Management System.")
         break
     else:
